@@ -27,3 +27,6 @@ Thumbs.db
 # 로그 파일
 *.log
 npm-debug.log*
+
+# 프롬프트 입력 파일
+프롬프트.txt
