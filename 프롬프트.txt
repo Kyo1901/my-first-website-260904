@@ -1,0 +1,4 @@
+이 프로젝트를 GitHub에 백업해줘
+- 저장소 이름: my-first-website
+- 공개 설정: public
+- 설명: 나의 첫 번째 웹사이트 프로젝트
