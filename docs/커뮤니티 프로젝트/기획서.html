@@ -1,0 +1,1060 @@
+<title>Novel Story 기획서</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap">
+<style>
+  :root{
+    --ink:#232837;
+    --ink-soft:#5B6478;
+    --ink-faint:#8791A5;
+    --paper:#F6F8FC;
+    --surface:#FFFFFF;
+    --surface-2:#EEF3FA;
+    --primary:#9FC1E8;
+    --primary-deep:#3E6693;
+    --primary-tint:#E4EEF9;
+    --accent:#E8845E;
+    --accent-tint:#FBE6DC;
+    --line:#DEE6F2;
+    --shadow: 0 1px 2px rgba(35,40,55,.04), 0 8px 24px -12px rgba(35,40,55,.12);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#E9ECF4;
+      --ink-soft:#A9B2C6;
+      --ink-faint:#7B8496;
+      --paper:#141824;
+      --surface:#1B2130;
+      --surface-2:#232A3B;
+      --primary:#89AEDC;
+      --primary-deep:#BFDAF5;
+      --primary-tint:#26344A;
+      --accent:#EC9871;
+      --accent-tint:#3A2A24;
+      --line:#2B3247;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#E9ECF4;
+    --ink-soft:#A9B2C6;
+    --ink-faint:#7B8496;
+    --paper:#141824;
+    --surface:#1B2130;
+    --surface-2:#232A3B;
+    --primary:#89AEDC;
+    --primary-deep:#BFDAF5;
+    --primary-tint:#26344A;
+    --accent:#EC9871;
+    --accent-tint:#3A2A24;
+    --line:#2B3247;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Gowun Dodum","Malgun Gothic",sans-serif;
+    line-height:1.7;
+    padding-inline:20px;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--primary-tint); color:var(--ink); }
+
+  h1,h2,h3{
+    font-family:"Gowun Batang", serif;
+    text-wrap:balance;
+    margin:0;
+    color:var(--ink);
+  }
+
+  a{ color:var(--primary-deep); }
+  a:focus-visible, button:focus-visible, .toc a:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+  }
+
+  .wrap{ max-width:920px; margin-inline:auto; }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    padding-block:56px 40px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .kicker{
+    font-size:.78rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--primary-deep);
+    font-weight:700;
+  }
+  .masthead h1{
+    font-size:clamp(2.4rem, 6vw, 3.6rem);
+    line-height:1.08;
+    font-weight:700;
+  }
+  .masthead .tagline{
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    max-width:60ch;
+  }
+  .chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:6px;
+    font-family:"Gowun Dodum",sans-serif;
+  }
+  .chip{
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink-soft);
+    padding:5px 12px;
+    border-radius:999px;
+    font-size:.82rem;
+    font-variant-numeric:tabular-nums;
+  }
+  .chip strong{ color:var(--ink); font-weight:700; }
+
+  /* ---------- TOC ---------- */
+  .toc{
+    margin-block:36px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:8px;
+  }
+  .toc ol{
+    list-style:none;
+    margin:0; padding:0;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+  }
+  .toc a{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    text-decoration:none;
+    color:var(--ink);
+    padding:12px 14px;
+    border-radius:10px;
+  }
+  .toc a:hover{ background:var(--surface-2); }
+  .toc .num{
+    font-family:"Gowun Batang",serif;
+    color:var(--primary-deep);
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+    font-size:.95rem;
+  }
+  .toc .label{ font-size:.98rem; }
+
+  /* ---------- Chapters ---------- */
+  .chapter{
+    padding-block:52px;
+    border-bottom:1px solid var(--line);
+    display:grid;
+    grid-template-columns:88px 1fr;
+    gap:28px;
+    scroll-margin-top:20px;
+  }
+  .chapter:last-of-type{ border-bottom:none; }
+  .chapter .marker{
+    font-family:"Gowun Batang",serif;
+    font-size:3rem;
+    font-weight:700;
+    color:var(--primary);
+    line-height:1;
+    font-variant-numeric:tabular-nums;
+    position:relative;
+    padding-top:2px;
+  }
+  .chapter .marker::after{
+    content:"";
+    display:block;
+    width:22px; height:8px;
+    margin-top:10px;
+    background:var(--accent);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 70%, 0 100%);
+  }
+  .chapter h2{
+    font-size:1.6rem;
+    margin-bottom:6px;
+  }
+  .chapter .lede{
+    color:var(--ink-soft);
+    max-width:62ch;
+    margin-bottom:22px;
+  }
+  .chapter-body > *+*{ margin-top:22px; }
+
+  @media (max-width:560px){
+    .chapter{ grid-template-columns:1fr; gap:10px; }
+    .chapter .marker{ font-size:2rem; display:flex; align-items:center; gap:10px; }
+    .chapter .marker::after{ margin-top:0; }
+  }
+
+  /* ---------- Reference cards (01) ---------- */
+  .ref-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+    gap:14px;
+  }
+  .ref-card{
+    border:1px solid var(--line);
+    background:var(--surface);
+    border-radius:12px;
+    padding:18px 20px;
+  }
+  .ref-card .site{
+    font-weight:700;
+    font-size:1.02rem;
+    margin-bottom:6px;
+  }
+  .ref-card .borrow{ color:var(--ink-soft); font-size:.92rem; }
+
+  /* ---------- Color swatches (02) ---------- */
+  .swatch-row{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+    gap:14px;
+  }
+  .swatch{
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    background:var(--surface);
+  }
+  .swatch .fill{ height:64px; }
+  .swatch .meta{ padding:12px 14px; }
+  .swatch .role{ font-size:.78rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em; }
+  .swatch .name{ font-weight:700; margin-block:2px 2px; }
+  .swatch .hex{ font-size:.85rem; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+
+  .type-sample{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    gap:14px;
+  }
+  .type-card{
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--surface);
+    padding:20px;
+  }
+  .type-card .role{ font-size:.78rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }
+  .type-card .sample{ font-size:1.7rem; }
+  .type-card.serif .sample{ font-family:"Gowun Batang",serif; font-weight:700; }
+  .type-card.sans .sample{ font-family:"Gowun Dodum",sans-serif; font-size:1.15rem; line-height:1.6; }
+  .type-card .name{ margin-top:10px; font-size:.85rem; color:var(--ink-soft); }
+
+  /* ---------- Data model (03) ---------- */
+  .model-note{
+    background:var(--primary-tint);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 18px;
+    color:var(--ink);
+    font-size:.96rem;
+  }
+  .table-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:14px;
+  }
+  .tcard{
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--surface);
+    overflow:hidden;
+  }
+  .tcard header{
+    background:var(--surface-2);
+    padding:10px 16px;
+    font-weight:700;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .tcard header .tag{
+    font-size:.7rem;
+    font-weight:700;
+    color:var(--primary-deep);
+    background:var(--primary-tint);
+    padding:2px 8px;
+    border-radius:999px;
+  }
+  .tcard ul{
+    margin:0; padding:12px 16px 14px;
+    list-style:none;
+    font-size:.88rem;
+    color:var(--ink-soft);
+  }
+  .tcard li{ padding-block:3px; }
+  .tcard li b{ color:var(--ink); font-weight:700; }
+  .tcard .rel{
+    padding:10px 16px 14px;
+    font-size:.82rem;
+    color:var(--accent);
+    border-top:1px dashed var(--line);
+  }
+
+  /* ---------- Page spec cards (04) ---------- */
+  .page-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    gap:16px;
+  }
+  .page-card{
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--surface);
+    padding:18px 20px;
+    box-shadow:var(--shadow);
+  }
+  .page-card .idx{
+    font-family:"Gowun Batang",serif;
+    color:var(--primary-deep);
+    font-weight:700;
+    font-size:.85rem;
+    font-variant-numeric:tabular-nums;
+  }
+  .page-card h3{
+    font-size:1.08rem;
+    margin-block:4px 10px;
+  }
+  .page-card ul{
+    margin:0; padding-left:18px;
+    font-size:.9rem;
+    color:var(--ink-soft);
+  }
+  .page-card li{ padding-block:2px; }
+  .page-card .note{
+    margin-top:10px;
+    font-size:.82rem;
+    color:var(--accent);
+    background:var(--accent-tint);
+    padding:6px 10px;
+    border-radius:8px;
+    display:inline-block;
+  }
+
+  /* ---------- Future ideas (05) ---------- */
+  .idea-list{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--surface);
+    overflow:hidden;
+  }
+  .idea{
+    display:flex;
+    gap:14px;
+    align-items:baseline;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+  }
+  .idea:last-child{ border-bottom:none; }
+  .idea .mark{ color:var(--primary-deep); font-family:"Gowun Batang",serif; font-weight:700; }
+  .idea .txt b{ color:var(--ink); }
+  .idea .txt{ color:var(--ink-soft); font-size:.95rem; }
+
+  /* ---------- Refs (06) & footer ---------- */
+  .docref{
+    border:1px dashed var(--line);
+    border-radius:12px;
+    padding:16px 18px;
+    color:var(--ink-soft);
+    font-size:.95rem;
+  }
+  .docref code{
+    background:var(--surface-2);
+    padding:2px 6px;
+    border-radius:6px;
+    font-size:.88em;
+  }
+  .docref + .docref{ margin-top:10px; }
+
+  /* ---------- DB schema (07) ---------- */
+  .principle-list{
+    display:flex;
+    flex-direction:column;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--surface);
+    overflow:hidden;
+  }
+  .principle{
+    display:flex;
+    gap:14px;
+    padding:13px 18px;
+    border-bottom:1px solid var(--line);
+    font-size:.92rem;
+    color:var(--ink-soft);
+  }
+  .principle:last-child{ border-bottom:none; }
+  .principle .mark{ color:var(--primary-deep); font-family:"Gowun Batang",serif; font-weight:700; flex-shrink:0; }
+  .principle b{ color:var(--ink); }
+
+  .table-scroll{
+    overflow-x:auto;
+    background:var(--surface);
+  }
+  table.spec{
+    width:100%;
+    min-width:520px;
+    border-collapse:collapse;
+    font-size:.86rem;
+  }
+  table.spec th{
+    text-align:left;
+    background:var(--surface-2);
+    padding:9px 14px;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink-faint);
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  table.spec td{
+    padding:9px 14px;
+    border-bottom:1px solid var(--line);
+    color:var(--ink-soft);
+    vertical-align:top;
+  }
+  table.spec tr:last-child td{ border-bottom:none; }
+  table.spec td b{ color:var(--ink); font-weight:700; }
+  .col{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size:.82em;
+    background:var(--surface-2);
+    padding:1px 6px;
+    border-radius:5px;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+
+  .schema-block{ border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .schema-block + .schema-block{ margin-top:16px; }
+  .schema-head{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:10px;
+    padding:13px 16px;
+    background:var(--surface-2);
+    border-bottom:1px solid var(--line);
+  }
+  .schema-head .tname{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-weight:700;
+    font-size:1rem;
+    color:var(--primary-deep);
+  }
+  .schema-head .sdesc{ color:var(--ink-soft); font-size:.85rem; }
+  .schema-note{
+    padding:10px 16px 14px;
+    font-size:.83rem;
+    color:var(--accent);
+    background:var(--surface);
+    border-top:1px dashed var(--line);
+    margin:0;
+  }
+
+  .erd-block{
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 20px;
+    overflow-x:auto;
+  }
+  .erd-block pre{
+    margin:0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size:.82rem;
+    line-height:1.65;
+    color:var(--ink);
+    white-space:pre;
+  }
+
+  .subhead{
+    font-family:"Gowun Batang",serif;
+    font-weight:700;
+    font-size:1.05rem;
+    color:var(--ink);
+    margin-bottom:10px;
+  }
+
+  footer{
+    padding-block:40px 60px;
+    text-align:center;
+    color:var(--ink-faint);
+    font-size:.85rem;
+  }
+  footer .seal{
+    font-family:"Gowun Batang",serif;
+    color:var(--primary-deep);
+    font-weight:700;
+    font-size:1rem;
+    margin-bottom:6px;
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="kicker">Community Service Plan</div>
+    <h1>Novel Story</h1>
+    <p class="tagline">좋아하는 소설과 잡지 이야기를 나누고, 별점과 좋아요로 취향을 기록하는 커뮤니티 — 서비스 기획서</p>
+    <div class="chips">
+      <span class="chip">버전 <strong>v1.0</strong></span>
+      <span class="chip">최종 정리 <strong>2026-09-11</strong></span>
+      <span class="chip">상태 <strong>MVP 범위 확정</strong></span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="목차">
+    <ol>
+      <li><a href="#ch01"><span class="num">01</span><span class="label">프로젝트 개요</span></a></li>
+      <li><a href="#ch02"><span class="num">02</span><span class="label">디자인 스타일</span></a></li>
+      <li><a href="#ch03"><span class="num">03</span><span class="label">데이터 모델</span></a></li>
+      <li><a href="#ch04"><span class="num">04</span><span class="label">페이지별 기능 명세</span></a></li>
+      <li><a href="#ch05"><span class="num">05</span><span class="label">추후 확장 아이디어</span></a></li>
+      <li><a href="#ch06"><span class="num">06</span><span class="label">참고 문서</span></a></li>
+      <li><a href="#ch07"><span class="num">07</span><span class="label">DB 구조 상세</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- 01 프로젝트 개요 -->
+  <section class="chapter" id="ch01">
+    <div class="marker">01</div>
+    <div class="chapter-body">
+      <h2>프로젝트 개요</h2>
+      <p class="lede">소설·잡지에 대한 감상과 정보를 나누는, 친근하고 유쾌한 분위기의 커뮤니티를 만든다.</p>
+      <ul style="margin:0;padding-left:18px;color:var(--ink-soft)">
+        <li><b style="color:var(--ink)">커뮤니티 주제</b> — 소설/잡지 정보 공유</li>
+        <li><b style="color:var(--ink)">사이트 이름</b> — Novel Story</li>
+        <li><b style="color:var(--ink)">분위기</b> — 친근하고 유쾌한 분위기</li>
+      </ul>
+      <div class="ref-grid">
+        <div class="ref-card">
+          <div class="site">📎 네이버 카페</div>
+          <div class="borrow">게시판 카테고리 구조, 댓글·대댓글 UI를 참고한다.</div>
+        </div>
+        <div class="ref-card">
+          <div class="site">📎 교보문고</div>
+          <div class="borrow">도서 정보 카드 UI — 표지 이미지 + 평점 + 태그 구성을 참고한다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 디자인 스타일 -->
+  <section class="chapter" id="ch02">
+    <div class="marker">02</div>
+    <div class="chapter-body">
+      <h2>디자인 스타일</h2>
+      <p class="lede">Primary는 넓은 면적에, Accent는 좋아요·평점·CTA 등 행동을 유도하는 지점에만 절제해서 사용한다.</p>
+
+      <div class="swatch-row">
+        <div class="swatch">
+          <div class="fill" style="background:#9FC1E8"></div>
+          <div class="meta"><div class="role">Primary</div><div class="name">파스텔 블루</div><div class="hex">#9FC1E8</div></div>
+        </div>
+        <div class="swatch">
+          <div class="fill" style="background:#F6F8FC;border-bottom:1px solid var(--line)"></div>
+          <div class="meta"><div class="role">Secondary</div><div class="name">오프화이트</div><div class="hex">#F6F8FC</div></div>
+        </div>
+        <div class="swatch">
+          <div class="fill" style="background:#E8845E"></div>
+          <div class="meta"><div class="role">Accent</div><div class="name">코럴 / 피치</div><div class="hex">#E8845E</div></div>
+        </div>
+      </div>
+
+      <div class="type-sample">
+        <div class="type-card serif">
+          <div class="role">제목 · Gowun Batang</div>
+          <div class="sample">소설 이야기</div>
+          <div class="name">헤딩, 챕터 넘버, 브랜드 워드마크</div>
+        </div>
+        <div class="type-card sans">
+          <div class="role">본문 · Gowun Dodum</div>
+          <div class="sample">오늘 읽은 소설의 한 문장을 남겨보세요.</div>
+          <div class="name">본문, 버튼, 라벨</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 데이터 모델 -->
+  <section class="chapter" id="ch03">
+    <div class="marker">03</div>
+    <div class="chapter-body">
+      <h2>데이터 모델 개요</h2>
+      <p class="lede">게시글마다 소설/잡지 제목을 자유 텍스트로 받지 않고, 마스터 데이터로 분리해 참조한다.</p>
+      <div class="model-note">
+        소설/잡지를 별도 테이블로 관리하면 <b>소설별 평균 평점</b>과 <b>같은 책을 다룬 글 모아보기</b>가 자연스럽게 구현된다.
+        게시글 작성 시에는 소설/잡지를 검색 후 선택하고, 목록에 없으면 그 자리에서 새로 등록한다.
+        실제 컬럼·제약 조건은 <a href="#ch07">7장 DB 구조 상세</a>에서 다룬다.
+      </div>
+
+      <div class="table-grid">
+        <div class="tcard">
+          <header>소설/잡지 <span class="tag">마스터</span></header>
+          <ul>
+            <li>제목 · 작가/출판사</li>
+            <li>장르 · 표지 이미지</li>
+            <li><b>평균 평점</b>(집계)</li>
+          </ul>
+        </div>
+        <div class="tcard">
+          <header>게시글</header>
+          <ul>
+            <li>제목 · 본문 · 작성일</li>
+            <li>작성자(FK)</li>
+            <li>소설/잡지(FK)</li>
+            <li>좋아요 수</li>
+          </ul>
+          <div class="rel">→ 소설/잡지를 참조</div>
+        </div>
+        <div class="tcard">
+          <header>댓글</header>
+          <ul>
+            <li>내용 · 작성 시간</li>
+            <li>작성자(FK)</li>
+            <li>상위 댓글(FK, 대댓글)</li>
+          </ul>
+          <div class="rel">→ 게시글을 참조 · 자기 자신 참조(대댓글)</div>
+        </div>
+        <div class="tcard">
+          <header>평점</header>
+          <ul>
+            <li>점수(5점 만점)</li>
+            <li>작성자(FK)</li>
+            <li>유저 × 소설 <b>유니크</b></li>
+          </ul>
+          <div class="rel">→ 소설/잡지를 참조</div>
+        </div>
+        <div class="tcard">
+          <header>좋아요</header>
+          <ul>
+            <li>작성자(FK)</li>
+            <li>대상 종류(게시글/댓글)</li>
+            <li>유저 × 대상 <b>유니크</b>, 토글</li>
+          </ul>
+          <div class="rel">→ 게시글 또는 댓글을 참조</div>
+        </div>
+        <div class="tcard">
+          <header>신고</header>
+          <ul>
+            <li>신고자(FK) · 사유</li>
+            <li>대상 종류(게시글/댓글)</li>
+            <li>처리 상태</li>
+          </ul>
+          <div class="rel">→ 게시글 또는 댓글을 참조</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 페이지별 기능 명세 -->
+  <section class="chapter" id="ch04">
+    <div class="marker">04</div>
+    <div class="chapter-body">
+      <h2>페이지별 기능 명세</h2>
+      <p class="lede">회원가입부터 관리자 화면까지, 총 10개 화면의 기능을 정의한다.</p>
+
+      <div class="page-grid">
+        <div class="page-card">
+          <div class="idx">4.1</div>
+          <h3>회원가입 페이지</h3>
+          <ul>
+            <li>이메일(계정) — 중복 검사만으로 즉시 가입</li>
+            <li>비밀번호(8자 이상 권장) · 비밀번호 확인</li>
+            <li>닉네임(중복 확인)</li>
+            <li>회원가입 버튼</li>
+          </ul>
+          <span class="note">전화번호는 수집 항목에서 제외</span>
+        </div>
+        <div class="page-card">
+          <div class="idx">4.2</div>
+          <h3>로그인 페이지</h3>
+          <ul>
+            <li>이메일 · 비밀번호 입력</li>
+            <li>로그인 / 회원가입 버튼</li>
+            <li>비밀번호 찾기 → 재설정 링크 발송 → 새 비밀번호 입력</li>
+          </ul>
+        </div>
+        <div class="page-card">
+          <div class="idx">4.3</div>
+          <h3>게시물 목록 페이지</h3>
+          <ul>
+            <li>검색(소설/잡지 제목, 작성자)</li>
+            <li>정렬(최신순 · 인기순 · 평점순)</li>
+            <li>게시글 카드 · 최근 댓글 2개 미리보기</li>
+            <li>페이지네이션</li>
+          </ul>
+        </div>
+        <div class="page-card">
+          <div class="idx">4.4</div>
+          <h3>게시글 작성/수정 페이지</h3>
+          <ul>
+            <li>소설/잡지 검색 후 선택(없으면 신규 등록)</li>
+            <li>제목 · 본문 · 이미지 첨부(선택)</li>
+            <li>본인 글에 한해 수정·삭제</li>
+          </ul>
+        </div>
+        <div class="page-card">
+          <div class="idx">4.5</div>
+          <h3>게시물 상세 페이지</h3>
+          <ul>
+            <li>본문 · 연결된 소설/잡지 정보 + 평균 평점</li>
+            <li>좋아요 버튼(토글) · 신고 버튼</li>
+            <li>본인 글 수정·삭제, 댓글 영역</li>
+          </ul>
+        </div>
+        <div class="page-card">
+          <div class="idx">4.6</div>
+          <h3>댓글 기능</h3>
+          <ul>
+            <li>댓글 좋아요(토글)</li>
+            <li>대댓글(1단계까지)</li>
+            <li>본인 댓글 수정·삭제 · 신고</li>
+          </ul>
+        </div>
+        <div class="page-card">
+          <div class="idx">4.7</div>
+          <h3>소설/잡지 평점 기능</h3>
+          <ul>
+            <li>별점(5점 만점) 등록</li>
+            <li>유저당 소설 1개에 평점 1회(재평가 시 수정)</li>
+            <li>목록/상세에 평균 평점 노출</li>
+          </ul>
+        </div>
+        <div class="page-card">
+          <div class="idx">4.8</div>
+          <h3>마이페이지</h3>
+          <ul>
+            <li>내가 쓴 글 · 댓글 · 좋아요한 글</li>
+            <li>내 평점 히스토리</li>
+            <li>프로필 수정 · 회원 탈퇴</li>
+          </ul>
+        </div>
+        <div class="page-card">
+          <div class="idx">4.9</div>
+          <h3>관리자 페이지</h3>
+          <ul>
+            <li>신고 목록 확인 및 처리</li>
+            <li>회원 제재/탈퇴 처리</li>
+            <li>소설/잡지 마스터 데이터 정리</li>
+          </ul>
+        </div>
+        <div class="page-card">
+          <div class="idx">4.10</div>
+          <h3>정책 페이지</h3>
+          <ul>
+            <li>이용약관</li>
+            <li>개인정보처리방침(이메일 · 닉네임 · 비밀번호)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 추후 확장 아이디어 -->
+  <section class="chapter" id="ch05">
+    <div class="marker">05</div>
+    <div class="chapter-body">
+      <h2>추후 확장 아이디어</h2>
+      <p class="lede">MVP 이후, 다음 화에서 다룰 만한 기능들.</p>
+      <div class="idea-list">
+        <div class="idea"><span class="mark">·</span><span class="txt"><b>알림 기능</b> — 내 글에 댓글/좋아요가 달리면 알림</span></div>
+        <div class="idea"><span class="mark">·</span><span class="txt"><b>소셜 로그인</b> — 구글 등 간편 로그인 연동</span></div>
+        <div class="idea"><span class="mark">·</span><span class="txt"><b>무한스크롤</b> — 목록 UX를 페이지네이션에서 전환</span></div>
+        <div class="idea"><span class="mark">·</span><span class="txt"><b>태그/장르 필터</b> — 소설·잡지를 장르별로 탐색</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 참고 문서 -->
+  <section class="chapter" id="ch06">
+    <div class="marker">06</div>
+    <div class="chapter-body">
+      <h2>참고 문서</h2>
+      <div class="docref">
+        이 기획서가 나오기까지의 검토 과정과 보완 논의는 <code>기획서_보완점.md</code> 문서에 정리되어 있다.
+      </div>
+      <div class="docref">
+        데이터베이스 스키마 원본 문서는 <code>DB 구조 기획서.md</code>이며, 그 전체 내용은 <a href="#ch07">7장</a>에 옮겨 실었다.
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 DB 구조 상세 -->
+  <section class="chapter" id="ch07">
+    <div class="marker">07</div>
+    <div class="chapter-body">
+      <h2>DB 구조 상세</h2>
+      <p class="lede">3장의 데이터 모델을 Supabase(Postgres) 기준 실제 테이블로 설계한다. 모든 테이블명은 <span class="col">ns_</span>로 시작한다.</p>
+
+      <div>
+        <div class="subhead">설계 원칙</div>
+        <div class="principle-list">
+          <div class="principle"><span class="mark">·</span><span><b>테이블명 접두사</b> — 모든 테이블은 <span class="col">ns_</span>로 시작해 다른 서비스와 네임스페이스가 섞이지 않도록 한다.</span></div>
+          <div class="principle"><span class="mark">·</span><span><b>기본 키</b> — <span class="col">uuid default gen_random_uuid()</span>. Supabase Auth의 <span class="col">auth.users.id</span>와 타입을 맞춘다.</span></div>
+          <div class="principle"><span class="mark">·</span><span><b>회원 정보</b> — 이메일·비밀번호는 <span class="col">auth.users</span>가 관리하고, <span class="col">ns_profiles</span>는 닉네임 등 앱 전용 정보만 갖는 1:1 확장 테이블이다. 전화번호 컬럼은 두지 않는다.</span></div>
+          <div class="principle"><span class="mark">·</span><span><b>대상 분리</b> — "게시글 또는 댓글"을 함께 대상으로 하는 좋아요·신고는 폴리모픽 컬럼 대신 <b>대상별로 테이블을 분리</b>해 실제 FK·UNIQUE 제약을 건다.</span></div>
+          <div class="principle"><span class="mark">·</span><span><b>집계 캐싱</b> — 좋아요 수·댓글 수·평균 평점은 컬럼으로 캐싱하고 트리거로 동기화해 매 요청마다 COUNT 쿼리를 돌리지 않는다.</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="subhead">테이블 목록</div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th>테이블명</th><th>설명</th><th>관련 페이지</th></tr></thead>
+            <tbody>
+              <tr><td><span class="col">ns_profiles</span></td><td>회원 프로필(닉네임 등 앱 전용 정보)</td><td>4.1, 4.8</td></tr>
+              <tr><td><span class="col">ns_novels</span></td><td>소설/잡지 마스터 데이터</td><td>4.4, 4.7</td></tr>
+              <tr><td><span class="col">ns_posts</span></td><td>게시글</td><td>4.3, 4.4, 4.5</td></tr>
+              <tr><td><span class="col">ns_comments</span></td><td>댓글/대댓글</td><td>4.5, 4.6</td></tr>
+              <tr><td><span class="col">ns_ratings</span></td><td>소설/잡지 평점</td><td>4.7</td></tr>
+              <tr><td><span class="col">ns_post_likes</span></td><td>게시글 좋아요</td><td>4.5</td></tr>
+              <tr><td><span class="col">ns_comment_likes</span></td><td>댓글 좋아요</td><td>4.6</td></tr>
+              <tr><td><span class="col">ns_post_reports</span></td><td>게시글 신고</td><td>4.5, 4.9</td></tr>
+              <tr><td><span class="col">ns_comment_reports</span></td><td>댓글 신고</td><td>4.6, 4.9</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="subhead">테이블 상세 정의</div>
+
+        <div class="schema-block">
+          <div class="schema-head"><span class="tname">ns_profiles</span><span class="sdesc">auth.users를 1:1로 확장하는 프로필 — 가입 트리거로 자동 생성</span></div>
+          <div class="table-scroll">
+            <table class="spec">
+              <thead><tr><th>컬럼</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td><span class="col">id</span></td><td>uuid</td><td>PK, FK → auth.users.id</td><td>Auth 계정과 1:1 매핑</td></tr>
+                <tr><td><span class="col">nickname</span></td><td>text</td><td>not null, unique</td><td>닉네임(가입 시 중복 확인)</td></tr>
+                <tr><td><span class="col">role</span></td><td>text</td><td>default 'member', check in ('member','admin')</td><td>관리자 페이지 접근 권한</td></tr>
+                <tr><td><span class="col">created_at</span></td><td>timestamptz</td><td>default now()</td><td>가입일</td></tr>
+                <tr><td><span class="col">updated_at</span></td><td>timestamptz</td><td>default now()</td><td>프로필 수정일</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="schema-note">회원 탈퇴는 하드 삭제 대신 계정을 비활성화하고 nickname을 "탈퇴한 사용자"로 치환하는 소프트 삭제를 권장 — 글/댓글의 작성자 연결이 끊기지 않는다.</p>
+        </div>
+
+        <div class="schema-block">
+          <div class="schema-head"><span class="tname">ns_novels</span><span class="sdesc">소설/잡지 마스터 — 게시글 작성 시 검색 후 선택, 없으면 신규 등록</span></div>
+          <div class="table-scroll">
+            <table class="spec">
+              <thead><tr><th>컬럼</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td><span class="col">id</span></td><td>uuid</td><td>PK</td><td></td></tr>
+                <tr><td><span class="col">media_type</span></td><td>text</td><td>not null, check in ('novel','magazine')</td><td>소설/잡지 구분</td></tr>
+                <tr><td><span class="col">title</span></td><td>text</td><td>not null</td><td>제목</td></tr>
+                <tr><td><span class="col">author</span></td><td>text</td><td>null 허용</td><td>작가</td></tr>
+                <tr><td><span class="col">publisher</span></td><td>text</td><td>null 허용</td><td>출판사/발행처</td></tr>
+                <tr><td><span class="col">genre</span></td><td>text</td><td>null 허용</td><td>장르</td></tr>
+                <tr><td><span class="col">cover_image_url</span></td><td>text</td><td>null 허용</td><td>표지 이미지</td></tr>
+                <tr><td><span class="col">avg_rating</span></td><td>numeric(2,1)</td><td>default 0</td><td>평균 평점(캐시)</td></tr>
+                <tr><td><span class="col">rating_count</span></td><td>integer</td><td>default 0</td><td>평점 개수(캐시)</td></tr>
+                <tr><td><span class="col">created_by</span></td><td>uuid</td><td>FK → ns_profiles.id</td><td>최초 등록자</td></tr>
+                <tr><td><span class="col">created_at / updated_at</span></td><td>timestamptz</td><td>default now()</td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="schema-note">제목만으로 UNIQUE 제약을 걸지 않는다(동명 소설 가능성). 중복 정리는 4.9 관리자 페이지에서 수동 처리.</p>
+        </div>
+
+        <div class="schema-block">
+          <div class="schema-head"><span class="tname">ns_posts</span><span class="sdesc">게시글</span></div>
+          <div class="table-scroll">
+            <table class="spec">
+              <thead><tr><th>컬럼</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td><span class="col">id</span></td><td>uuid</td><td>PK</td><td></td></tr>
+                <tr><td><span class="col">novel_id</span></td><td>uuid</td><td>not null, FK → ns_novels.id on delete restrict</td><td>연결된 소설/잡지</td></tr>
+                <tr><td><span class="col">author_id</span></td><td>uuid</td><td>not null, FK → ns_profiles.id on delete restrict</td><td>작성자</td></tr>
+                <tr><td><span class="col">title</span></td><td>text</td><td>not null</td><td>게시글 제목</td></tr>
+                <tr><td><span class="col">content</span></td><td>text</td><td>not null</td><td>본문</td></tr>
+                <tr><td><span class="col">image_url</span></td><td>text</td><td>null 허용</td><td>첨부 이미지</td></tr>
+                <tr><td><span class="col">like_count</span></td><td>integer</td><td>default 0</td><td>좋아요 수(캐시)</td></tr>
+                <tr><td><span class="col">comment_count</span></td><td>integer</td><td>default 0</td><td>댓글 수(캐시)</td></tr>
+                <tr><td><span class="col">created_at / updated_at</span></td><td>timestamptz</td><td>default now()</td><td></td></tr>
+                <tr><td><span class="col">deleted_at</span></td><td>timestamptz</td><td>null 허용</td><td>신고 처리 등 소프트 삭제</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="schema-block">
+          <div class="schema-head"><span class="tname">ns_comments</span><span class="sdesc">댓글/대댓글</span></div>
+          <div class="table-scroll">
+            <table class="spec">
+              <thead><tr><th>컬럼</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td><span class="col">id</span></td><td>uuid</td><td>PK</td><td></td></tr>
+                <tr><td><span class="col">post_id</span></td><td>uuid</td><td>not null, FK → ns_posts.id on delete cascade</td><td>게시글 삭제 시 댓글도 삭제</td></tr>
+                <tr><td><span class="col">author_id</span></td><td>uuid</td><td>not null, FK → ns_profiles.id on delete restrict</td><td>작성자</td></tr>
+                <tr><td><span class="col">parent_id</span></td><td>uuid</td><td>null 허용, FK → ns_comments.id on delete restrict</td><td>대댓글의 원댓글</td></tr>
+                <tr><td><span class="col">depth</span></td><td>smallint</td><td>default 0, check in (0,1)</td><td>0=원댓글, 1=대댓글 — <b>1단계 제한을 DB에서도 강제</b></td></tr>
+                <tr><td><span class="col">content</span></td><td>text</td><td>not null</td><td></td></tr>
+                <tr><td><span class="col">like_count</span></td><td>integer</td><td>default 0</td><td>좋아요 수(캐시)</td></tr>
+                <tr><td><span class="col">created_at / updated_at</span></td><td>timestamptz</td><td>default now()</td><td></td></tr>
+                <tr><td><span class="col">deleted_at</span></td><td>timestamptz</td><td>null 허용</td><td>대댓글이 있으면 "삭제된 댓글입니다" 표시</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="schema-note">트리거로 parent_id가 가리키는 댓글의 depth가 0인지 검증 — depth=1 댓글에는 다시 대댓글을 달 수 없다.</p>
+        </div>
+
+        <div class="schema-block">
+          <div class="schema-head"><span class="tname">ns_ratings</span><span class="sdesc">소설/잡지 평점</span></div>
+          <div class="table-scroll">
+            <table class="spec">
+              <thead><tr><th>컬럼</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td><span class="col">id</span></td><td>uuid</td><td>PK</td><td></td></tr>
+                <tr><td><span class="col">novel_id</span></td><td>uuid</td><td>not null, FK → ns_novels.id on delete cascade</td><td></td></tr>
+                <tr><td><span class="col">user_id</span></td><td>uuid</td><td>not null, FK → ns_profiles.id on delete cascade</td><td></td></tr>
+                <tr><td><span class="col">score</span></td><td>smallint</td><td>not null, check 1~5</td><td>별점</td></tr>
+                <tr><td><span class="col">created_at / updated_at</span></td><td>timestamptz</td><td>default now()</td><td>재평가 시 갱신</td></tr>
+                <tr><td>—</td><td>—</td><td><b>UNIQUE</b>(novel_id, user_id)</td><td>유저당 소설 1개에 평점 1회</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="schema-block">
+          <div class="schema-head"><span class="tname">ns_post_likes</span> / <span class="tname">ns_comment_likes</span><span class="sdesc">좋아요 — 대상별로 테이블 분리</span></div>
+          <div class="table-scroll">
+            <table class="spec">
+              <thead><tr><th>컬럼</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td><span class="col">id</span></td><td>uuid</td><td>PK</td><td></td></tr>
+                <tr><td><span class="col">post_id</span> / <span class="col">comment_id</span></td><td>uuid</td><td>not null, FK on delete cascade</td><td>대상 게시글/댓글</td></tr>
+                <tr><td><span class="col">user_id</span></td><td>uuid</td><td>not null, FK → ns_profiles.id on delete cascade</td><td></td></tr>
+                <tr><td><span class="col">created_at</span></td><td>timestamptz</td><td>default now()</td><td></td></tr>
+                <tr><td>—</td><td>—</td><td><b>UNIQUE</b>(대상, user_id)</td><td>중복 방지, 재클릭 시 row 삭제로 토글</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="schema-block">
+          <div class="schema-head"><span class="tname">ns_post_reports</span> / <span class="tname">ns_comment_reports</span><span class="sdesc">신고 — 대상별로 테이블 분리</span></div>
+          <div class="table-scroll">
+            <table class="spec">
+              <thead><tr><th>컬럼</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td><span class="col">id</span></td><td>uuid</td><td>PK</td><td></td></tr>
+                <tr><td><span class="col">post_id</span> / <span class="col">comment_id</span></td><td>uuid</td><td>not null, FK on delete cascade</td><td>신고 대상</td></tr>
+                <tr><td><span class="col">reporter_id</span></td><td>uuid</td><td>not null, FK → ns_profiles.id on delete cascade</td><td>신고자</td></tr>
+                <tr><td><span class="col">reason</span></td><td>text</td><td>not null</td><td>신고 사유</td></tr>
+                <tr><td><span class="col">status</span></td><td>text</td><td>default 'pending', check in ('pending','resolved','rejected')</td><td>처리 상태</td></tr>
+                <tr><td><span class="col">resolved_by</span></td><td>uuid</td><td>null 허용, FK → ns_profiles.id</td><td>처리한 관리자</td></tr>
+                <tr><td><span class="col">resolved_at</span></td><td>timestamptz</td><td>null 허용</td><td></td></tr>
+                <tr><td><span class="col">created_at</span></td><td>timestamptz</td><td>default now()</td><td></td></tr>
+                <tr><td>—</td><td>—</td><td><b>UNIQUE</b>(대상, reporter_id)</td><td>동일 유저의 중복 신고 방지</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="subhead">관계도 (ERD 요약)</div>
+        <div class="erd-block"><pre>auth.users (Supabase 관리)
+  └─ 1:1 ─ ns_profiles
+              ├─ 1:N ─ ns_novels.created_by
+              ├─ 1:N ─ ns_posts.author_id
+              ├─ 1:N ─ ns_comments.author_id
+              ├─ 1:N ─ ns_ratings.user_id
+              ├─ 1:N ─ ns_post_likes.user_id
+              ├─ 1:N ─ ns_comment_likes.user_id
+              ├─ 1:N ─ ns_post_reports.reporter_id
+              └─ 1:N ─ ns_comment_reports.reporter_id
+
+ns_novels
+  ├─ 1:N ─ ns_posts.novel_id
+  └─ 1:N ─ ns_ratings.novel_id
+
+ns_posts
+  ├─ 1:N ─ ns_comments.post_id
+  ├─ 1:N ─ ns_post_likes.post_id
+  └─ 1:N ─ ns_post_reports.post_id
+
+ns_comments
+  ├─ 1:N ─ ns_comments.parent_id  (자기 참조, depth 0 → 1)
+  ├─ 1:N ─ ns_comment_likes.comment_id
+  └─ 1:N ─ ns_comment_reports.comment_id</pre></div>
+      </div>
+
+      <div>
+        <div class="subhead">집계 컬럼 동기화 (트리거)</div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th>캐시 컬럼</th><th>갱신 시점</th></tr></thead>
+            <tbody>
+              <tr><td><span class="col">ns_posts.like_count</span></td><td>ns_post_likes insert/delete</td></tr>
+              <tr><td><span class="col">ns_posts.comment_count</span></td><td>ns_comments insert / deleted_at 설정·해제</td></tr>
+              <tr><td><span class="col">ns_comments.like_count</span></td><td>ns_comment_likes insert/delete</td></tr>
+              <tr><td><span class="col">ns_novels.avg_rating, rating_count</span></td><td>ns_ratings insert/update/delete 시 재계산</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="subhead">Row Level Security(RLS) 정책 개요</div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th>테이블</th><th>SELECT</th><th>INSERT</th><th>UPDATE</th><th>DELETE</th></tr></thead>
+            <tbody>
+              <tr><td><span class="col">ns_profiles</span></td><td>전체 공개</td><td>가입 트리거 자동 생성</td><td>본인만</td><td>관리자만</td></tr>
+              <tr><td><span class="col">ns_novels</span></td><td>전체 공개</td><td>로그인 유저 누구나</td><td>관리자만</td><td>관리자만</td></tr>
+              <tr><td><span class="col">ns_posts</span></td><td>deleted_at is null 조건 공개</td><td>로그인 유저 누구나</td><td>작성자 본인</td><td>작성자 본인 또는 관리자</td></tr>
+              <tr><td><span class="col">ns_comments</span></td><td>deleted_at is null 조건 공개</td><td>로그인 유저 누구나</td><td>작성자 본인</td><td>작성자 본인 또는 관리자</td></tr>
+              <tr><td><span class="col">ns_ratings</span></td><td>전체 공개</td><td>본인 것만</td><td>본인 것만</td><td>본인 또는 관리자</td></tr>
+              <tr><td><span class="col">ns_*_likes</span></td><td>전체 공개</td><td>본인만(토글)</td><td>—</td><td>본인만(토글)</td></tr>
+              <tr><td><span class="col">ns_*_reports</span></td><td>관리자 + 신고 접수자 본인</td><td>로그인 유저 누구나</td><td>관리자만</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="subhead">인덱스 계획</div>
+        <div class="principle-list">
+          <div class="principle"><span class="mark">·</span><span>모든 FK 컬럼(novel_id, post_id, comment_id, author_id, user_id, reporter_id 등)에 기본 인덱스</span></div>
+          <div class="principle"><span class="mark">·</span><span><span class="col">ns_posts (novel_id, created_at desc)</span> — 소설별 최신 글 조회</span></div>
+          <div class="principle"><span class="mark">·</span><span><span class="col">ns_posts (created_at desc)</span> — 목록 최신순 정렬</span></div>
+          <div class="principle"><span class="mark">·</span><span><span class="col">ns_posts (like_count desc)</span> — 목록 인기순 정렬</span></div>
+          <div class="principle"><span class="mark">·</span><span><span class="col">ns_novels (avg_rating desc)</span> — 목록 평점순 정렬</span></div>
+          <div class="principle"><span class="mark">·</span><span><span class="col">ns_comments (post_id, created_at)</span> — 게시글별 댓글 순서 조회</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="seal">— 기획 완료 —</div>
+    Novel Story · Community Service Plan
+  </footer>
+
+</div>
