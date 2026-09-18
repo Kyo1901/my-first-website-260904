@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>트랙핏(TrackFit) 모바일 서비스 UI 기획서</title>
+<style>
+  :root {
+    --md-sys-color-primary: rgb(65 95 145);
+    --md-sys-color-on-primary: rgb(255 255 255);
+    --md-sys-color-primary-container: rgb(214 227 255);
+    --md-sys-color-on-primary-container: rgb(40 71 119);
+    --md-sys-color-secondary: rgb(86 95 113);
+    --md-sys-color-secondary-container: rgb(218 226 249);
+    --md-sys-color-on-secondary-container: rgb(62 71 89);
+    --md-sys-color-tertiary: rgb(112 85 117);
+    --md-sys-color-tertiary-container: rgb(250 216 253);
+    --md-sys-color-on-tertiary-container: rgb(87 62 92);
+    --md-sys-color-error: rgb(186 26 26);
+    --md-sys-color-error-container: rgb(255 218 214);
+    --md-sys-color-on-error-container: rgb(147 0 10);
+    --md-sys-color-background: rgb(249 249 255);
+    --md-sys-color-on-background: rgb(25 28 32);
+    --md-sys-color-surface: rgb(249 249 255);
+    --md-sys-color-on-surface: rgb(25 28 32);
+    --md-sys-color-surface-variant: rgb(224 226 236);
+    --md-sys-color-on-surface-variant: rgb(68 71 78);
+    --md-sys-color-outline: rgb(116 119 127);
+    --md-sys-color-outline-variant: rgb(196 198 208);
+    --md-sys-color-surface-container-lowest: rgb(255 255 255);
+    --md-sys-color-surface-container-low: rgb(243 243 250);
+    --md-sys-color-surface-container: rgb(237 237 244);
+    --md-sys-color-surface-container-high: rgb(231 232 238);
+    --md-sys-color-surface-container-highest: rgb(226 226 233);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --md-sys-color-primary: rgb(170 199 255);
+      --md-sys-color-on-primary: rgb(10 48 95);
+      --md-sys-color-primary-container: rgb(40 71 119);
+      --md-sys-color-on-primary-container: rgb(214 227 255);
+      --md-sys-color-secondary: rgb(190 198 220);
+      --md-sys-color-secondary-container: rgb(62 71 89);
+      --md-sys-color-on-secondary-container: rgb(218 226 249);
+      --md-sys-color-tertiary: rgb(221 188 224);
+      --md-sys-color-tertiary-container: rgb(87 62 92);
+      --md-sys-color-on-tertiary-container: rgb(250 216 253);
+      --md-sys-color-error: rgb(255 180 171);
+      --md-sys-color-error-container: rgb(147 0 10);
+      --md-sys-color-on-error-container: rgb(255 218 214);
+      --md-sys-color-background: rgb(17 19 24);
+      --md-sys-color-on-background: rgb(226 226 233);
+      --md-sys-color-surface: rgb(17 19 24);
+      --md-sys-color-on-surface: rgb(226 226 233);
+      --md-sys-color-surface-variant: rgb(68 71 78);
+      --md-sys-color-on-surface-variant: rgb(196 198 208);
+      --md-sys-color-outline: rgb(142 144 153);
+      --md-sys-color-outline-variant: rgb(68 71 78);
+      --md-sys-color-surface-container-lowest: rgb(12 14 19);
+      --md-sys-color-surface-container-low: rgb(25 28 32);
+      --md-sys-color-surface-container: rgb(29 32 36);
+      --md-sys-color-surface-container-high: rgb(40 42 47);
+      --md-sys-color-surface-container-highest: rgb(51 53 58);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --md-sys-color-primary: rgb(170 199 255);
+    --md-sys-color-on-primary: rgb(10 48 95);
+    --md-sys-color-primary-container: rgb(40 71 119);
+    --md-sys-color-on-primary-container: rgb(214 227 255);
+    --md-sys-color-secondary: rgb(190 198 220);
+    --md-sys-color-secondary-container: rgb(62 71 89);
+    --md-sys-color-on-secondary-container: rgb(218 226 249);
+    --md-sys-color-tertiary: rgb(221 188 224);
+    --md-sys-color-tertiary-container: rgb(87 62 92);
+    --md-sys-color-on-tertiary-container: rgb(250 216 253);
+    --md-sys-color-error: rgb(255 180 171);
+    --md-sys-color-error-container: rgb(147 0 10);
+    --md-sys-color-on-error-container: rgb(255 218 214);
+    --md-sys-color-background: rgb(17 19 24);
+    --md-sys-color-on-background: rgb(226 226 233);
+    --md-sys-color-surface: rgb(17 19 24);
+    --md-sys-color-on-surface: rgb(226 226 233);
+    --md-sys-color-surface-variant: rgb(68 71 78);
+    --md-sys-color-on-surface-variant: rgb(196 198 208);
+    --md-sys-color-outline: rgb(142 144 153);
+    --md-sys-color-outline-variant: rgb(68 71 78);
+    --md-sys-color-surface-container-lowest: rgb(12 14 19);
+    --md-sys-color-surface-container-low: rgb(25 28 32);
+    --md-sys-color-surface-container: rgb(29 32 36);
+    --md-sys-color-surface-container-high: rgb(40 42 47);
+    --md-sys-color-surface-container-highest: rgb(51 53 58);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0 16px 64px;
+    background: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    line-height: 1.6;
+  }
+
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  header.hero {
+    padding: 32px 24px;
+    margin: 0 -16px 24px;
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    border-radius: 0 0 20px 20px;
+  }
+  header.hero .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    opacity: .8;
+    margin: 0 0 6px;
+  }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: clamp(22px, 5vw, 30px);
+  }
+  header.hero p { margin: 0; opacity: .9; }
+
+  .theme-toggle {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 0 0;
+    z-index: 5;
+  }
+  .theme-toggle button {
+    border: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--md-sys-color-surface-container-highest);
+    color: var(--md-sys-color-on-background);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  section {
+    background: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 18px;
+  }
+
+  h2 {
+    margin: 0 0 14px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--md-sys-color-primary);
+  }
+  h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    font-size: 13px;
+    flex: none;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table th, table td {
+    text-align: left;
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    vertical-align: top;
+  }
+  table th { width: 120px; color: var(--md-sys-color-on-surface-variant); font-weight: 600; white-space: nowrap; }
+
+  .note {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+    font-size: 13px;
+  }
+
+  .page-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  .page-card {
+    background: var(--md-sys-color-surface-container);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .page-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .page-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px; height: 24px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .page-title { font-weight: 700; font-size: 15px; }
+  .page-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+    margin-left: auto;
+  }
+  .page-card h4 {
+    margin: 10px 0 4px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .page-card ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .page-card li { margin-bottom: 3px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--md-sys-color-surface-container-highest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    font-size: 13px;
+  }
+  .chip.must {
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    border-color: transparent;
+    font-weight: 600;
+  }
+  .chip .idx {
+    font-size: 11px;
+    font-weight: 700;
+    opacity: .7;
+  }
+
+  .priority { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .priority-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--md-sys-color-surface-container);
+  }
+  .priority-num {
+    flex: none;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .priority-item strong { display: block; font-size: 14px; margin-bottom: 2px; }
+  .priority-item span { font-size: 13.5px; color: var(--md-sys-color-on-surface-variant); }
+
+  footer {
+    text-align: center;
+    font-size: 13px;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-top: 24px;
+  }
+
+  @media (min-width: 640px) {
+    .page-grid { grid-template-columns: 1fr 1fr; }
+    .priority { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="theme-toggle">
+    <button id="themeBtn" type="button">🌓 테마 전환</button>
+  </div>
+
+  <header class="hero">
+    <p class="eyebrow">모바일 서비스 UI 기획서</p>
+    <h1>트랙핏 (TrackFit)</h1>
+    <p>자신들만의 운동 기록을 공유하는 SNS · 운동 장소 공유 및 목표 지정·달성이 핵심 가치</p>
+  </header>
+
+  <section>
+    <h2><span class="num">1</span>서비스 기본 정보</h2>
+    <table>
+      <tr><th>서비스 이름</th><td>트랙핏 (TrackFit)</td></tr>
+      <tr><th>서비스 주제</th><td>자신들만의 운동 기록을 공유</td></tr>
+      <tr><th>핵심 가치</th><td>운동할 장소 공유 및 자신의 목표 지정 및 달성</td></tr>
+      <tr><th>타겟 사용자</th><td>20~40대</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2><span class="num">2</span>디자인 컨셉</h2>
+    <table>
+      <tr><th>메인 색상</th><td><code>style_theme</code> (Material 3 기반, Primary <code>#415F91</code> 블루 계열) — <code>light.css</code> / <code>dark.css</code>로 라이트·다크 모드 모두 정의</td></tr>
+      <tr><th>전체 분위기</th><td>깔끔하고 전문적인 분위기</td></tr>
+      <tr><th>참고 사이트</th><td>인스타그램, X(구 트위터)</td></tr>
+      <tr><th>접근성 지원</th><td>라이트/다크 각각 표준·중간대비(<code>-mc</code>)·고대비(<code>-hc</code>) 3단계 테마 제공</td></tr>
+    </table>
+    <p class="note">실외에서 운동하며 사용하는 서비스 특성상 햇빛 아래 가독성을 위해 설정(마이페이지)에서 고대비 모드를 선택할 수 있게 노출을 권장합니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">3</span>필요한 페이지 목록</h2>
+    <div class="page-grid">
+
+      <div class="page-card">
+        <div class="page-card-head">
+          <span class="page-badge">1</span>
+          <span class="page-title">로그인/회원가입 페이지</span>
+        </div>
+        <h4>기능</h4>
+        <ul>
+          <li>이메일 + 패스워드 로그인</li>
+          <li>이메일 회원가입(이메일 인증 X)</li>
+          <li>닉네임(이름)</li>
+          <li>생년월일(만 14세 미만 가입 금지)</li>
+          <li>자동 로그인(토큰 저장)</li>
+          <li>비밀번호 재설정(이메일 링크 발송)</li>
+          <li>이용약관/개인정보처리방침 동의 체크박스</li>
+        </ul>
+        <h4>특징</h4>
+        <ul>
+          <li>회원가입 후 로그인 페이지에서 로그인 시도</li>
+          <li>로그인 성공 시 메인 피드로 이동</li>
+          <li>최초 실행 시 간단한 온보딩(2~3장) 노출</li>
+        </ul>
+      </div>
+
+      <div class="page-card">
+        <div class="page-card-head">
+          <span class="page-badge">2</span>
+          <span class="page-title">메인 페이지 (홈 화면)</span>
+        </div>
+        <h4>기능</h4>
+        <ul>
+          <li>팔로잉 기반 피드 - 최신순 정렬</li>
+          <li>infinite scroll(무한 스크롤)</li>
+          <li>pull to refresh(당겨서 새로고침)</li>
+          <li>게시물 좋아요, 댓글, 공유</li>
+          <li>탐색 탭 전환</li>
+        </ul>
+        <h4>특징</h4>
+        <ul>
+          <li>카드형 피드</li>
+          <li>더블 탭으로 좋아요, 하트 애니메이션</li>
+          <li>스크롤 방향에 따라 탭바 숨김/표시</li>
+        </ul>
+      </div>
+
+      <div class="page-card">
+        <div class="page-card-head">
+          <span class="page-badge">3</span>
+          <span class="page-title">게시물 목록 페이지</span>
+        </div>
+        <h4>기능</h4>
+        <ul>
+          <li>운동 종목/해시태그/장소별 게시물 모아보기</li>
+          <li>인기순·최신순 정렬 전환</li>
+          <li>키워드·닉네임 검색</li>
+          <li>그리드 ↔ 리스트 뷰 전환</li>
+        </ul>
+        <h4>특징</h4>
+        <ul>
+          <li>3열 그리드 기본, 사진 위주 레이아웃</li>
+          <li>검색창 상단 고정(sticky)</li>
+        </ul>
+      </div>
+
+      <div class="page-card">
+        <div class="page-card-head">
+          <span class="page-badge">4</span>
+          <span class="page-title">게시물 상세 페이지</span>
+        </div>
+        <h4>기능</h4>
+        <ul>
+          <li>사진/영상 슬라이드(다중 업로드 시)</li>
+          <li>운동 종목·장소·소요 시간 표시</li>
+          <li>좋아요/댓글/공유, 댓글 대댓글</li>
+          <li>작성자 프로필로 이동</li>
+          <li>연결된 목표 진행률 표시</li>
+          <li>본인 게시물 수정/삭제 메뉴</li>
+        </ul>
+        <h4>특징</h4>
+        <ul>
+          <li>사진 아래 운동 정보 카드로 구분</li>
+          <li>댓글은 하단 바텀시트로 펼쳐보기</li>
+        </ul>
+      </div>
+
+      <div class="page-card">
+        <div class="page-card-head">
+          <span class="page-badge">5</span>
+          <span class="page-title">게시물 작성 페이지</span>
+        </div>
+        <h4>기능</h4>
+        <ul>
+          <li>사진/영상 업로드(다중 선택)</li>
+          <li>운동 종목·시간/거리 기록 입력</li>
+          <li>장소 태그(GPS 연동 시 자동 추천)</li>
+          <li>목표와 연결(달성 인증 게시물)</li>
+          <li>공개 범위 설정(전체/팔로워만/나만 보기)</li>
+        </ul>
+        <h4>특징</h4>
+        <ul>
+          <li>단계형(사진 선택 → 정보 입력 → 공개 설정) 작성 플로우</li>
+        </ul>
+      </div>
+
+      <div class="page-card">
+        <div class="page-card-head">
+          <span class="page-badge">6</span>
+          <span class="page-title">마이페이지</span>
+        </div>
+        <h4>기능</h4>
+        <ul>
+          <li>프로필(닉네임, 사진, 소개) 조회/수정</li>
+          <li>내가 쓴 게시물 그리드</li>
+          <li>팔로워/팔로잉 수 → 목록 페이지 이동</li>
+          <li>목표 달성 현황 요약</li>
+          <li>로그아웃, 회원 탈퇴, 알림/테마 설정</li>
+        </ul>
+        <h4>특징</h4>
+        <ul>
+          <li>상단 프로필 + 하단 탭(게시물/목표)</li>
+          <li>타인 프로필 조회 화면으로 레이아웃 재사용</li>
+        </ul>
+      </div>
+
+      <div class="page-card">
+        <div class="page-card-head">
+          <span class="page-badge">7</span>
+          <span class="page-title">목표 설정/관리 페이지</span>
+          <span class="page-tag">신규 추가</span>
+        </div>
+        <h4>기능</h4>
+        <ul>
+          <li>운동 목표 등록(종목, 목표치, 기간)</li>
+          <li>목표별 진행률 트래킹(그래프/게이지)</li>
+          <li>목표 달성 시 게시물 연결 인증</li>
+          <li>목표 알림(리마인드) 설정</li>
+        </ul>
+        <h4>특징</h4>
+        <ul>
+          <li>핵심 가치 "목표 지정 및 달성"을 담당하는 페이지 — 기존 목록에 빠져 있어 이번에 추가</li>
+        </ul>
+      </div>
+
+      <div class="page-card">
+        <div class="page-card-head">
+          <span class="page-badge">8</span>
+          <span class="page-title">알림 페이지</span>
+          <span class="page-tag">신규 추가</span>
+        </div>
+        <h4>기능</h4>
+        <ul>
+          <li>좋아요/댓글/팔로우/목표 달성 알림 목록</li>
+          <li>안 읽은 알림 표시(뱃지)</li>
+          <li>탭하면 관련 페이지로 바로 이동</li>
+        </ul>
+        <h4>특징</h4>
+        <ul>
+          <li>인스타그램·X처럼 하단 탭바 별도 탭으로 배치 — 기존 기획엔 누락됐던 화면</li>
+        </ul>
+      </div>
+
+      <div class="page-card">
+        <div class="page-card-head">
+          <span class="page-badge">9</span>
+          <span class="page-title">팔로워/팔로잉 목록 페이지</span>
+          <span class="page-tag">신규 추가</span>
+        </div>
+        <h4>기능</h4>
+        <ul>
+          <li>팔로워/팔로잉 탭 전환</li>
+          <li>목록에서 바로 팔로우/언팔로우</li>
+          <li>닉네임 검색 필터링</li>
+        </ul>
+        <h4>특징</h4>
+        <ul>
+          <li>마이페이지·타인 프로필에서 팔로워·팔로잉 수 탭 시 진입</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">4</span>핵심 기능 정의</h2>
+    <h4 style="margin:0 0 8px;font-size:13px;color:var(--md-sys-color-on-surface-variant);">필수 기능</h4>
+    <div class="chips" style="margin-bottom:16px;">
+      <span class="chip must"><span class="idx">1</span>회원가입/로그인 (이메일 기반)</span>
+      <span class="chip must"><span class="idx">2</span>운동 기록 게시물 작성 및 팔로잉 피드</span>
+      <span class="chip must"><span class="idx">3</span>목표 설정 및 달성률 트래킹</span>
+    </div>
+    <h4 style="margin:0 0 8px;font-size:13px;color:var(--md-sys-color-on-surface-variant);">부가 기능</h4>
+    <div class="chips">
+      <span class="chip"><span class="idx">1</span>PWA</span>
+      <span class="chip"><span class="idx">2</span>신고/차단</span>
+      <span class="chip"><span class="idx">3</span>GPS (장소 자동 태그·추천)</span>
+      <span class="chip"><span class="idx">4</span>목표 달성 알림/리마인드</span>
+      <span class="chip"><span class="idx">5</span>랭킹/주간 운동 통계</span>
+      <span class="chip"><span class="idx">6</span>알림함(좋아요·댓글·팔로우)</span>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">5</span>모바일 UI 특징</h2>
+    <table>
+      <tr><th>네비게이션</th><td>하단 탭바 4개(홈/탐색/알림/마이페이지) + 중앙 플로팅 작성(+) 버튼. 목표 페이지는 마이페이지 하위 탭(게시물/목표)으로 진입해 5탭+FAB의 과밀을 방지</td></tr>
+      <tr><th>주요 버튼 위치</th><td>작성(+) 버튼은 하단 탭바 중앙 원형 플로팅 버튼, 좋아요/댓글/공유는 게시물 하단 가로 정렬</td></tr>
+      <tr><th>터치 영역 크기</th><td>최소 44×44px 이상 확보, 엄지 조작이 쉬운 화면 하단 위주 배치</td></tr>
+      <tr><th>세로/가로 모드</th><td>세로 모드 기본 지원, 사진/영상 상세 보기 시에만 가로 모드 허용</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2><span class="num">6</span>개발 우선순위</h2>
+    <div class="priority">
+      <div class="priority-item">
+        <div class="priority-num">1차</div>
+        <div><strong>기반 기능</strong><span>로그인/회원가입, 메인 피드(홈), 게시물 작성/상세 페이지</span></div>
+      </div>
+      <div class="priority-item">
+        <div class="priority-num">2차</div>
+        <div><strong>핵심 가치 확장</strong><span>목표 설정/관리 페이지, 마이페이지, 게시물 목록(탐색) 페이지, 팔로워/팔로잉 목록 페이지</span></div>
+      </div>
+      <div class="priority-item">
+        <div class="priority-num">3차</div>
+        <div><strong>부가 기능</strong><span>알림 페이지, PWA, GPS 장소 태그·추천, 신고/차단, 랭킹/통계, 목표 알림</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    작성일 2026-09-18 · 작성자 (입력 필요)
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeBtn');
+    var KEY = 'trackfit-plan-theme';
+    function apply(theme) {
+      if (theme === 'light' || theme === 'dark') {
+        root.setAttribute('data-theme', theme);
+      } else {
+        root.removeAttribute('data-theme');
+      }
+    }
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) {}
+    apply(saved);
+    btn.addEventListener('click', function () {
+      var current = root.getAttribute('data-theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var next;
+      if (!current) { next = prefersDark ? 'light' : 'dark'; }
+      else if (current === 'dark') { next = 'light'; }
+      else { next = 'dark'; }
+      apply(next);
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>

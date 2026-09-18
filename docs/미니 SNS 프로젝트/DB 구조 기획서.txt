@@ -1,0 +1,146 @@
+== SNS 사이트 DB 구조 정리 ==
+
+※ 이 문서는 `기획서.txt`(모바일 서비스 UI 기획서)를 기준으로 검토·보완되었습니다.
+※ [수정] [신규] 표시가 붙은 항목은 이번 검토에서 바로잡거나 추가한 부분입니다.
+※ 모든 테이블 이름 앞에는 서비스 이름 트랙핏(TrackFit)의 약자인 tf_ 를 붙입니다.
+
+------------------------------------------------------
+1. 사용자 정보 (tf_users 테이블)
+------------------------------------------------------
+- SNS 로그인/프로필 화면에서 필요한 정보들:
+  * id (INT, PK, 자동증가): 사용자 번호 - 1, 2, 3... 자동으로 증가
+  * username (VARCHAR, UNIQUE): 사용자명 - @ 로 표시되는 고유 아이디
+  * email (VARCHAR, UNIQUE): 이메일 - 로그인할 때 사용
+  * password_hash (VARCHAR): 비밀번호 [수정] 평문이 아니라 반드시 해시(bcrypt 등)로 암호화해서 저장
+  * display_name (VARCHAR): 표시 이름 - 프로필에 보이는 실제 이름
+  * bio (TEXT, NULL 허용): 소개글 - 프로필에 보이는 자기소개
+  * profile_image_url (VARCHAR, NULL 허용): 프로필 사진 - 프로필 이미지 경로
+  * birth_date (DATE) [신규]: 생년월일 - UI 기획서의 "만 14세 미만 가입 금지" 검증에 필요한데 기존 DB 구조에는 없었음
+  * followers_count (INT, DEFAULT 0) [신규]: 팔로워 수 캐시 - 마이페이지에 매번 COUNT 하지 않고 빠르게 보여주기 위한 캐시값
+  * following_count (INT, DEFAULT 0) [신규]: 팔로잉 수 캐시
+  * is_active (BOOLEAN, DEFAULT TRUE) [신규]: 활성 상태 - 마이페이지의 "회원 탈퇴" 기능을 위한 소프트 삭제 플래그(탈퇴해도 게시물/댓글 참조가 깨지지 않도록 실제 행을 지우지 않고 FALSE로 전환)
+  * created_at (TIMESTAMP): 가입일
+  * updated_at (TIMESTAMP) [신규]: 정보 수정일 - 프로필 수정 기능이 있으므로 필요
+
+------------------------------------------------------
+2. 게시물 정보 (tf_posts 테이블)
+------------------------------------------------------
+- SNS 피드 화면에서 필요한 정보들:
+  * id (INT, PK, 자동증가): 게시물 고유번호
+  * user_id (INT, FK → tf_users.id): 작성자 ID
+  * caption (TEXT): 사진에 쓴 글 내용
+  * image_url (VARCHAR): 작성 시 선택한 Unsplash 이미지의 URL 링크
+  * workout_type (VARCHAR) [수정: tf_comments 테이블에서 이동]: 운동 종목
+  * workout_duration (INT, 분 단위) [수정: tf_comments 테이블에서 이동]: 운동 시간
+  * workout_distance (DECIMAL, NULL 허용) [수정: tf_comments 테이블에서 이동]: 운동 거리 (없을 수 있음)
+  * workout_latitude (DECIMAL, NULL 허용) [수정: tf_comments 테이블에서 이동, 위경도로 세분화]: 운동 위치 - 위도
+  * workout_longitude (DECIMAL, NULL 허용) [수정: tf_comments 테이블에서 이동, 위경도로 세분화]: 운동 위치 - 경도
+  * location_name (VARCHAR, NULL 허용) [신규]: 지도 좌표와 별개로 사람이 읽을 장소 이름("한강공원" 등)을 함께 저장 - 게시물 목록의 "장소별 모아보기" 기능에 필요
+  * goal_id (INT, FK → tf_goals.id, NULL 허용) [신규]: 이 게시물이 인증하는 목표 - UI 기획서 "목표와 연결(목표 달성 인증 게시물)" 기능에 필요
+  * visibility (ENUM: public/followers/private, DEFAULT public) [신규]: 공개 범위 - 게시물 작성 페이지의 "전체/팔로워만/나만 보기" 설정 저장용
+  * likes_count (INT, DEFAULT 0): 좋아요 수 - 실제 기록은 아래 tf_likes 테이블에 남기고, 이 필드는 빠른 조회용 캐시로 병행 유지
+  * comments_count (INT, DEFAULT 0) [신규]: 댓글 수 캐시
+  * shares_count (INT, DEFAULT 0): 공유 수
+  * created_at (TIMESTAMP): 작성일
+  * updated_at (TIMESTAMP) [신규]: 수정일 - 게시물 상세 페이지의 "수정/삭제" 기능에 필요
+
+  ⚠ [검토 필요] 게시물 이미지 방식 불일치
+  - 이 문서(DB 기획서)는 "Unsplash에서 이미지 1장 선택"을 전제로 image_url 단일 컬럼을 사용 중
+  - 반면 UI 기획서(기획서.txt) 5번 페이지는 "사진/영상 업로드(다중 선택)"으로 정의되어 있어 서로 어긋남
+  - 두 문서 중 하나로 방향을 맞춰야 함: (A) Unsplash 단일 이미지로 통일 → UI 기획서 문구 수정, (B) 실제 다중 업로드 지원 → tf_post_images 테이블(post_id, image_url, sort_order)을 별도로 분리해야 함
+  - 결정 전까지는 현재 구조(Unsplash 단일 이미지)를 유지
+
+------------------------------------------------------
+게시물 작성 방식 (변경 없음)
+------------------------------------------------------
+- 1단계: 내용(캡션) 입력
+- 2단계: Unsplash API로 랜덤 이미지 여러 개 보여주기
+- 3단계: 마음에 드는 이미지 선택 (새로고침으로 다른 랜덤 이미지들 볼 수 있음)
+- 4단계: 선택한 이미지 링크를 tf_posts 테이블의 image_url에 저장
+※ 위 "이미지 방식 불일치" 항목 참고 - 운동 종목/시간/거리/위치, 목표 연결, 공개 범위도 이 작성 단계에 함께 입력받아야 함(현재 서술에는 캡션·이미지만 언급됨)
+
+------------------------------------------------------
+3. 댓글 정보 (tf_comments 테이블)
+------------------------------------------------------
+- 게시물 댓글을 위한 정보들:
+  * id (INT, PK, 자동증가): 댓글 번호
+  * content (TEXT): 댓글에 쓴 글
+  * user_id (INT, FK → tf_users.id): 댓글 작성자
+  * post_id (INT, FK → tf_posts.id): 댓글 달린 게시물
+  * parent_comment_id (INT, FK → tf_comments.id, NULL 허용) [신규]: 대댓글인 경우 부모 댓글 ID (NULL이면 최상위 댓글) - UI 기획서 게시물 상세 페이지의 "댓글 대댓글" 기능에 필요한데 기존 구조에는 없었음
+  * created_at (TIMESTAMP): 댓글 작성일
+
+  [수정] 기존에 이 테이블에 잘못 들어가 있던 "운동 종목 / 운동 시간 / 운동 거리 / 운동 위치(GPS)" 4개 필드는 댓글과 무관한 정보이므로 위 tf_posts 테이블로 옮겼습니다.
+
+------------------------------------------------------
+4. 좋아요 정보 (tf_likes 테이블) [신규 - 필수]
+------------------------------------------------------
+- 누가 어떤 게시물에 좋아요를 눌렀는지 기록:
+  * id (INT, PK, 자동증가)
+  * user_id (INT, FK → tf_users.id): 좋아요를 누른 사람
+  * post_id (INT, FK → tf_posts.id): 좋아요 받은 게시물
+  * created_at (TIMESTAMP): 좋아요 누른 시각
+  * UNIQUE(user_id, post_id): 한 사람이 같은 게시물에 중복으로 좋아요를 누를 수 없도록 제한
+
+  ⚠ [검토 필요] 기존 문서는 "tf_posts.likes_count 필드만으로 관리하고 별도 테이블은 두지 않는다"고 되어 있었는데, 이 방식으로는 "누가 좋아요를 눌렀는지" 기록이 남지 않아 다음이 불가능합니다.
+  - UI 기획서의 "더블 탭으로 좋아요" 시, 이미 누른 상태에서 다시 누르면 취소되는 토글 동작
+  - "내가 좋아요한 게시물 목록" 같은 기능 확장
+  → tf_likes 테이블을 별도로 두고, tf_posts.likes_count는 좋아요/취소 시마다 +1 / -1로 갱신하는 캐시 값으로 병행 사용하는 것을 권장합니다.
+
+------------------------------------------------------
+5. 팔로우 정보 (tf_follows 테이블) [신규 - 필수]
+------------------------------------------------------
+- 누가 누구를 팔로우하는지 기록:
+  * id (INT, PK, 자동증가)
+  * follower_id (INT, FK → tf_users.id): 팔로우 하는 사람
+  * following_id (INT, FK → tf_users.id): 팔로우 당하는 사람
+  * created_at (TIMESTAMP): 팔로우 시작 시각
+  * UNIQUE(follower_id, following_id): 같은 관계 중복 방지
+
+  ⚠ [검토 필요] UI 기획서의 "팔로잉 기반 피드", "팔로워/팔로잉 목록 페이지(9번)", "마이페이지의 팔로우/언팔로우" 기능은 모두 이 관계 테이블이 있어야 동작하는데, 기존 DB 구조에는 팔로우 관련 테이블이 전혀 없었습니다.
+
+------------------------------------------------------
+6. 목표 정보 (tf_goals 테이블) [신규 - 핵심 가치 반영]
+------------------------------------------------------
+- 사용자가 설정한 운동 목표 기록:
+  * id (INT, PK, 자동증가)
+  * user_id (INT, FK → tf_users.id): 목표를 설정한 사람
+  * title (VARCHAR): 목표 이름/종목 (예: "월 50km 달리기")
+  * target_value (DECIMAL): 목표치 (예: 50)
+  * unit (VARCHAR): 단위 (km, 회, 분 등)
+  * current_value (DECIMAL, DEFAULT 0): 현재까지 달성한 값 - 진행률 계산에 사용
+  * start_date (DATE), end_date (DATE): 목표 기간
+  * status (ENUM: in_progress/completed/failed, DEFAULT in_progress): 진행 상태
+  * created_at (TIMESTAMP), updated_at (TIMESTAMP)
+
+  ⚠ [검토 필요] 서비스 핵심 가치가 "목표 지정 및 달성"이고 UI 기획서 7번 페이지가 통째로 목표 설정/관리 페이지인데, 기존 DB 구조에는 목표 관련 테이블이 전혀 없었습니다. tf_posts.goal_id와 연결해 "이 게시물은 어떤 목표를 인증한 게시물인지"를 표현할 수 있습니다.
+
+------------------------------------------------------
+7. 알림 정보 (tf_notifications 테이블) [신규]
+------------------------------------------------------
+- 좋아요/댓글/팔로우/목표 달성 알림 기록:
+  * id (INT, PK, 자동증가)
+  * user_id (INT, FK → tf_users.id): 알림을 받는 사람
+  * type (ENUM: like/comment/follow/goal_achieved): 알림 종류
+  * actor_id (INT, FK → tf_users.id, NULL 허용): 알림을 발생시킨 사람(좋아요/댓글/팔로우를 한 사람)
+  * target_post_id (INT, FK → tf_posts.id, NULL 허용): 관련 게시물
+  * target_goal_id (INT, FK → tf_goals.id, NULL 허용): 관련 목표
+  * is_read (BOOLEAN, DEFAULT FALSE): 읽음 여부
+  * created_at (TIMESTAMP): 알림 발생 시각
+
+  ⚠ [검토 필요] UI 기획서 8번 "알림 페이지"(좋아요/댓글/팔로우/목표 달성 알림, 안 읽은 알림 표시)를 구현하려면 이 테이블이 필요한데 기존 구조에는 없었습니다.
+
+------------------------------------------------------
+SNS 테이블 연결 관계 (전체 정리)
+------------------------------------------------------
+- tf_users - tf_posts: 한 사용자가 여러 게시물 작성 가능 (1:N)
+- tf_users - tf_comments: 한 사용자가 여러 댓글 작성 가능 (1:N)
+- tf_posts - tf_comments: 한 게시물에 여러 댓글이 달릴 수 있음 (1:N)
+- tf_comments - tf_comments: 댓글이 댓글을 참조(parent_comment_id)하는 자기참조 구조로 대댓글 표현 (1:N) [신규]
+- tf_users - tf_likes - tf_posts: 사용자와 게시물의 다대다(N:M) 관계, tf_likes 테이블이 중간 연결 역할 [신규]
+- tf_users - tf_follows - tf_users: 사용자와 사용자의 다대다(N:M) 관계, tf_follows 테이블이 자기참조로 팔로워/팔로잉 표현 [신규]
+- tf_users - tf_goals: 한 사용자가 여러 목표를 설정 가능 (1:N) [신규]
+- tf_goals - tf_posts: 하나의 목표에 여러 인증 게시물이 연결될 수 있음 (1:N, tf_posts.goal_id) [신규]
+- tf_users/tf_posts/tf_goals - tf_notifications: 알림은 특정 사용자에게 귀속되며, 관련 게시물·목표·발생시킨 사용자를 함께 참조 [신규]
+
+== SNS DB 구조 정리 완료 ==
